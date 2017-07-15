@@ -11,9 +11,15 @@ we flag that as potentially be O(n^2) or O(ab). The whole point is to capture th
 How would I detect the end of a python for-loop? 
 
 
-NEXT TO-DO: Now that we have successfully developed a way to detect the beginning and end of a for-loop, we should focus on detecting inner for-loops.
+NEXT TO-DO: Successfully detect inner loops. Now have to account for cases where we can have many non-nested for-loops
+inside of another loop. 
+
+The algorithm should be like this: IF for-loop detected, then continue searching until the next statement is 
+truly the end of line for that for-loop statement.
 '''
 
+from string import letters
+# from random import choice
 
 
 '''
@@ -42,39 +48,80 @@ with open(file) as fp:
 		-If the next line is NOT empty and does NOT contain the same number of tabs, then it's considered the end of that for-loop statement
 	'''
 	num_loops_detected = 0
+	num_nested_loops_detected = 0
 	num_of_nested_for_loops = 0
 	num_tabs = 0
 	for_loop_inner_indent_level = 0
+	for_loop_indent_level = 0
+	for_loop_start_line = 0
+
+	# stripped_file = [line.rstrip('') for line in fp]
+	# stripped_file = [line.rstrip('\n') for line in stripped_file]
+	# stripped_file = [line.rstrip('') for line in stripped_file]
+	# [stripped_file.remove(i) for i in stripped_file]
+	# REMOVE all newline-only elements as well as empty lines.
+	new_stripped_file = filter(lambda a: a != '', fp)
+	new_stripped_file = filter(lambda a: a != '\n', new_stripped_file)
+
+	# for i in stripped_file:
+		# if i == '':
+			# stripped_file.remove(i)
+
+	print new_stripped_file
 
 
-	for line in fp:
 
-		if line in ['\n', '\r\n']:
-			print "LINE: ", line_count, " is empty!\n"
-		else:
-			num_tabs = line.count('\t')
+	for line in new_stripped_file:
+		# print line
+
+		# if line in ['\n', '\r\n'] and "#" not in line:
+			# print "LINE: ", line_count, " is empty!\n"
+		# else:
+			# print "LINE: ", line_count, ": ", line
+			# num_tabs = line.count('\t')
 			# print "LINE: ", line_count, ": ", line
 
 
 		if num_loops_detected >= 1:
-			if line.count('\t') != for_loop_inner_indent_level:
-				print "LINE: ", line_count, ": EOL Detected on line ", line_count, ". Its indent level is ", line.count('\t')
-				print "LINE: ", line_count, ": The for loop ended on line ", (line_count - 1),'\n'
-			# End of for-loop detector
-			# if '\t' in line and (line in ['\n', '\r\n']):
-				# print "EOL Detected on line ", line_count, "\n"
 
+			# END-OF-LINE DETECTION!
+			if (line.count('\t') <= for_loop_inner_indent_level-1) and "for" not in line:
+				terms = ''
+				for i in range (0,num_nested_loops_detected+1):
+					terms += letters[i].lower()
+
+
+
+				print '\n\n'
+				print "LINE: ", line_count, ": EOL Detected on line ", line_count, ". Its indent level is ", line.count('\t')
+				print "LINE: ", line_count, ": The for loop ended on line ", (line_count - 1)
+				print "LINE: ", line_count, ": TOTAL FOR-LOOP ", num_loops_detected
+				print "LINE: ", line_count, ": TOTAL NESTED FOR-LOOP ", num_nested_loops_detected
+				print "POTENTIAL RUNTIME COST: O(n^", len(terms), ") or O(", terms, ")\t"
+				print '\n\n'
 
 				# Reset
 				for_loop_inner_indent_level = 0
 				num_loops_detected = 0
+				num_nested_loops_detected = 0
 
 
 		# FOR-LOOP DETECTION! It's a for loop! Now keep checking...
-		if "for" in line and "in" in line:
+		if "for" in line and "in" in line and "#" not in line:
+			print "\nFOR LOOP FOUND ON LINE:\t", line_count, ": '", line, "'"
+			# Detect inner loop
+			# if num_loops_detected >= 1:
 
+
+			if (line.count('\t') != for_loop_indent_level):
+				print "NESTED LOOP FOUND ON LINE:\t", line_count, line
+				num_nested_loops_detected += 1
+
+			for_loop_indent_level = line.count('\t')
 			for_loop_inner_indent_level = line.count('\t') + 1
+
 			num_loops_detected += 1
+			for_loop_start_line = line_count
 
 			print "LINE: ", line_count, ": For-loop found! Level of its inner elements' indent:\t", for_loop_inner_indent_level
 

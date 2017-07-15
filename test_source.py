@@ -6,12 +6,15 @@ m = [4,5,6,7,8,9,10]
 for i in l:
 	print i
 
+	for j in range(0,10):
+		print j
 
-def test_funct(l):
+		for k in range(0,10):
+			print k
 
-	for t in l:
-		print t
+		for l in range(0,10):
+			print l
 
-	for s in l:
-		print s
+print
+
 
