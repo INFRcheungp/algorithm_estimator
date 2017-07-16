@@ -22,26 +22,14 @@ from string import letters
 # from random import choice
 
 
-'''
-'''
-def check_for(line):
-	if "for" in line:
-		print "It's a for loop!\n"
-		w
-
-
-# def check_nested_loops:
-# 	pass
-
-
+# Test file
 file = './test_source.py'
 
-num_of_for_loops = 0
-# num_of_nested_for_loops = 0
-
-with open(file) as fp:
+'''
+Checks for the existence of for-loops in this file and estimates their Big O cost.
+'''
+def check_for_loops(file):
 	line_count = 1
-
 	'''
 	Loop through each line and detect for loops.
 		-If a "for"
@@ -54,43 +42,44 @@ with open(file) as fp:
 	for_loop_inner_indent_level = 0
 	for_loop_indent_level = 0
 	for_loop_start_line = 0
+	for_loop_detected_previously = False
+	first_for_loop_detection = False
 
-	# stripped_file = [line.rstrip('') for line in fp]
-	# stripped_file = [line.rstrip('\n') for line in stripped_file]
-	# stripped_file = [line.rstrip('') for line in stripped_file]
-	# [stripped_file.remove(i) for i in stripped_file]
 	# REMOVE all newline-only elements as well as empty lines.
-	new_stripped_file = filter(lambda a: a != '', fp)
+	new_stripped_file = filter(lambda a: a != '', file)
 	new_stripped_file = filter(lambda a: a != '\n', new_stripped_file)
 
-	# for i in stripped_file:
-		# if i == '':
-			# stripped_file.remove(i)
+	print len(new_stripped_file)
+	odd= 0
+	for n in new_stripped_file:
+		index = new_stripped_file.index(n)
+		# print index, n
 
-	print new_stripped_file
+		if index % 2 != 0:
+			odd += 1
+			# print index, n
+			new_stripped_file.insert(index, '---')
+
+	# For some reason, a line needs to be added after the end of the for loop in order for the end-of-loop to be found.
+	new_stripped_file.append('END')
+
+	print odd, "NUM ODDS"
 
 
+			# new_stripped_file = list('-'.join(new_stripped_file))
+			# new_stripped_file.insert(index, '---')
+
+	print new_stripped_file,"\n\n"
 
 	for line in new_stripped_file:
-		# print line
-
-		# if line in ['\n', '\r\n'] and "#" not in line:
-			# print "LINE: ", line_count, " is empty!\n"
-		# else:
-			# print "LINE: ", line_count, ": ", line
-			# num_tabs = line.count('\t')
-			# print "LINE: ", line_count, ": ", line
-
 
 		if num_loops_detected >= 1:
 
 			# END-OF-LINE DETECTION!
-			if (line.count('\t') <= for_loop_inner_indent_level-1) and "for" not in line:
+			if ("---" not in line) and (line.count('\t') <= for_loop_indent_level):
 				terms = ''
 				for i in range (0,num_nested_loops_detected+1):
 					terms += letters[i].lower()
-
-
 
 				print '\n\n'
 				print "LINE: ", line_count, ": EOL Detected on line ", line_count, ". Its indent level is ", line.count('\t')
@@ -102,33 +91,49 @@ with open(file) as fp:
 
 				# Reset
 				for_loop_inner_indent_level = 0
+				for_loop_indent_level = 0
 				num_loops_detected = 0
 				num_nested_loops_detected = 0
+				for_loop_start_line = 0
+				for_loop_detected_previously = False
+				first_for_loop_detection = False
 
 
 		# FOR-LOOP DETECTION! It's a for loop! Now keep checking...
 		if "for" in line and "in" in line and "#" not in line:
-			print "\nFOR LOOP FOUND ON LINE:\t", line_count, ": '", line, "'"
-			# Detect inner loop
-			# if num_loops_detected >= 1:
+			current_index = new_stripped_file.index(line)
+			print "FOR LOOP FOUND ON LINE:\t", line_count, ": '", line.strip('\n'), "' INDEX:\t", current_index
+
+			# Only applies to the first time a for loop is detected
+			if first_for_loop_detection is False:
+				first_for_loop_detection = True
+				for_loop_indent_level = line.count('\t')
 
 
-			if (line.count('\t') != for_loop_indent_level):
+			if (for_loop_detected_previously and line.count('\t') > for_loop_indent_level):
 				print "NESTED LOOP FOUND ON LINE:\t", line_count, line
 				num_nested_loops_detected += 1
 
-			for_loop_indent_level = line.count('\t')
+			# for_loop_indent_level = line.count('\t')
 			for_loop_inner_indent_level = line.count('\t') + 1
+			for_loop_detected_previously = True
 
 			num_loops_detected += 1
 			for_loop_start_line = line_count
 
 			print "LINE: ", line_count, ": For-loop found! Level of its inner elements' indent:\t", for_loop_inner_indent_level
 
-			# print "For-loop found! Now checking for nested loops\n"
-
 
 		line_count += 1
 
 
+################################################################################################################################
+################################################################################################################################
 
+num_of_for_loops = 0
+# num_of_nested_for_loops = 0
+
+with open(file) as fp:
+
+
+	check_for_loops(fp)
