@@ -11,8 +11,8 @@ we flag that as potentially be O(n^2) or O(ab). The whole point is to capture th
 How would I detect the end of a python for-loop? 
 
 
-NEXT TO-DO: Successfully detect inner loops. Now have to account for cases where we can have many non-nested for-loops
-inside of another loop. 
+NEXT TO-DO: Perhaps we should make this program check code segments that are marked only with special
+characters to indicate to this program that only this piece of the source code should be checked.
 
 The algorithm should be like this: IF for-loop detected, then continue searching until the next statement is 
 truly the end of line for that for-loop statement.
