@@ -196,6 +196,21 @@ def check_for_loops(file):
 		line_count += 1
 
 
+'''
+Searches through the entire source code file and grabs all of the marked code segments and
+returns them for analysis.
+'''
+def find_algo_segments(_source_code_file_):
+	search_terms = ["ALGO_START", "ALGO_END"]
+	code_segments_to_analyze = []
+
+	# Open file
+	# Go through each line and detect ALGO_START
+	# Once detected, save all subsequent lines until ALGO_END. This will be saved as one segment.
+
+	return code_segments_to_analyze
+
+
 ################################################################################################################################
 ################################################################################################################################
 
