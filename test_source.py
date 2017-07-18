@@ -3,6 +3,7 @@ l = [1,2,3]
 m = [4,5,6,7,8,9,10]
 
 
+# @ALGO_START
 for i in l:
 	print i
 	for j in range(0,10):
@@ -15,10 +16,10 @@ for i in l:
 				print p
 				for o in range(0,10):
 					print o
+# @ALGO_END
 
 
-'''
-'''
+
 def test():
 	for i in range(0,100):
 		for k in range(0,100):

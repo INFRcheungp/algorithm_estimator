@@ -92,11 +92,34 @@ from string import letters
 # Test file
 file = './test_source.py'
 
+'''
+This function strips the newline and empty string elements from the file.
+'''
+def strip_file(file):
+	# (1) Remove all newline-only elements as well as empty lines.
+	new_stripped_file = [] 
+	new_stripped_file = filter(lambda a: a != '', file)
+	new_stripped_file = filter(lambda a: a != '\n', new_stripped_file)
+
+	# print len(new_stripped_file)
+	odd= 0
+	for n in new_stripped_file:
+		index = new_stripped_file.index(n)
+
+		if index % 2 != 0:
+			odd += 1
+			new_stripped_file.insert(index, '---')
+
+	# For some reason, a line needs to be added after the end of the for loop in order for the end-of-loop to be found.
+	new_stripped_file.append('END')
+
+	# print new_stripped_file,"\n\n"
+	return new_stripped_file
+
 
 '''
 Checks for the existence of for-loops in this file and estimates their Big O cost in runtime.
 '''
-@test
 def check_for_loops(file):
 	line_count = 1
 	'''
@@ -114,31 +137,7 @@ def check_for_loops(file):
 	for_loop_detected_previously = False
 	first_for_loop_detection = False
 
-	# REMOVE all newline-only elements as well as empty lines.
-	new_stripped_file = filter(lambda a: a != '', file)
-	new_stripped_file = filter(lambda a: a != '\n', new_stripped_file)
-
-	print len(new_stripped_file)
-	odd= 0
-	for n in new_stripped_file:
-		index = new_stripped_file.index(n)
-		# print index, n
-
-		if index % 2 != 0:
-			odd += 1
-			# print index, n
-			new_stripped_file.insert(index, '---')
-
-	# For some reason, a line needs to be added after the end of the for loop in order for the end-of-loop to be found.
-	new_stripped_file.append('END')
-
-	print odd, "NUM ODDS"
-
-
-			# new_stripped_file = list('-'.join(new_stripped_file))
-			# new_stripped_file.insert(index, '---')
-
-	print new_stripped_file,"\n\n"
+	new_stripped_file = strip_file(file)
 
 	for line in new_stripped_file:
 
@@ -204,6 +203,29 @@ def find_algo_segments(_source_code_file_):
 	search_terms = ["ALGO_START", "ALGO_END"]
 	code_segments_to_analyze = []
 
+	first_line_index = -1
+	last_line_index = -1
+
+	file = strip_file(_source_code_file_)
+
+	for line in file:
+		if "@ALGO_START" in line:
+			# Get the starting index of the starting point of the code segment to be checked
+			first_line_index = file.index(line)
+
+		elif "@ALGO_END" in line:
+			# End of code segment-to-be-checked is reached. Cleave it off.
+			last_line_index = file.index(line)
+
+			# Append every string instance from the beginning to the end of the code segment.
+			code_segments_to_analyze.append(file[first_line_index:last_line_index+1])
+
+			last_line_index = -1
+			first_line_index = -1
+
+		else:
+			continue
+
 	# Open file
 	# Go through each line and detect ALGO_START
 	# Once detected, save all subsequent lines until ALGO_END. This will be saved as one segment.
@@ -214,10 +236,12 @@ def find_algo_segments(_source_code_file_):
 ################################################################################################################################
 ################################################################################################################################
 
-num_of_for_loops = 0
-# num_of_nested_for_loops = 0
-
 with open(file) as fp:
+	# Find the algorithm segment(s) first.
+	algo_segment_list = find_algo_segments(fp)
 
+	for i in algo_segment_list:
+		for j in i:
+			print j
 
-	check_for_loops(fp)
+	# check_for_loops(fp)
