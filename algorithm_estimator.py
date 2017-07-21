@@ -45,19 +45,73 @@ def strip_file(file):
 
 
 '''
-Usual Performance: O(branched_calls^depth)
+Usual Runtime Performance:	O(branched_calls^depth)
+Usual Space Complexity:		O(n)
 
 Look for the following for recursion:
+
 -Num of internal calls = For example, a recursive function that calls itself twice 
 for four iterations on each call will incur O(2^4) runtime or O(2^n), where n is the 
-depth of the call tree.
+depth of the call tree. 
 
--The num of iterations will be a runtime 
+-The num of iterations will be a runtime of O(1)
+
+-The base case
+
+-The recursive case
+
 '''
-def check_recursion(file):
+def check_recursion(code_segment):
 	# (0) Make sure it's a function first. Look for 'def' and '()' and ':'
 	# (1) Get the name of the function
 	# (2) check how many explicity calls inside the body. This gets us the 'branched_calls'
+	# name_of_func = get_function_name(code_segment)
+
+	# if if_valid_function(code_segment):
+		# print "VALID FUNCTION:\n"
+	base_case = ''
+	recursive_case = ''
+	num_recursive_calls = 0
+	name_of_func = ''
+
+	for line in code_segment:
+		# print line
+		if 'def' in line and ':' in line:
+			print line,'\n\n'
+			# Parse the name of the function from the string.
+			name_of_func = get_function_name(line) 
+		else:
+			if name_of_func in line:
+				num_recursive_calls  = line.count(name_of_func)
+
+	print "NAME OF FUNC:\t", name_of_func
+	print "NUM OF RECURSIVE CALLS:\t", num_recursive_calls
+	print "POTENTIAL RUNTIME COMPLEXITY: O(", num_recursive_calls, "^n)"
+	print "POTENTIAL SPACE COMPLEXITY: O(n)"
+
+
+def if_valid_function(segment):
+	print segment
+	return ('def' in segment) and (':' in segment) and ('(' in segment and ')' in segment)
+
+
+'''
+Checks if this input is actually a function; if so, then return its name.
+'''
+def get_function_name(line):
+	# Use this as the string separator
+	separate = '('
+	# Get the function string after the 'def' part and discard everything after the '(' char is encountered.
+	name_of_func = line.split()[1].split(separate,1)[0]
+	print name_of_func
+	return name_of_func
+
+
+'''
+Grabs all of a function's arguments
+'''
+def get_function_args(function_signature):
+	pass
 
 
 '''
@@ -152,27 +206,27 @@ def find_algo_segments(_source_code_file_):
 
 	file = strip_file(_source_code_file_)
 
-	for line in file:
-		if "@ALGO_START" in line:
+	for index, match in enumerate(file):
+
+		if "@ALGO_START" in match:
 			# Get the starting index of the starting point of the code segment to be checked
-			first_line_index = file.index(line)
+			first_line_index = index
 
-		elif "@ALGO_END" in line:
+
+		elif "@ALGO_END" in match:
 			# End of code segment-to-be-checked is reached. Cleave it off.
-			last_line_index = file.index(line)
+			last_line_index = index
 
-			# Append every string instance from the beginning to the end of the code segment.
 			code_segments_to_analyze.append(file[first_line_index:last_line_index+1])
-
+			# Reset
 			last_line_index = -1
 			first_line_index = -1
 
 		else:
 			continue
 
-	# Open file
-	# Go through each line and detect ALGO_START
-	# Once detected, save all subsequent lines until ALGO_END. This will be saved as one segment.
+
+	# print code_segments_to_analyze
 
 	return code_segments_to_analyze
 
@@ -194,7 +248,11 @@ with open(file) as fp:
 
 	num_code_segements = len(algo_segment_list)
 
+	check_recursion(algo_segment_list[1])
+
 	# Go through each marked code segment and estimate its algorithmic runtime performance.
 	for i in range(0,num_code_segements):
-		check_for_loops(algo_segment_list[i])
+		print "SEGMENT:\n", algo_segment_list[i],'\n\n'
+		# check_for_loops(algo_segment_list[i])
+		# check_recursion(algo_segment_list[i])
 

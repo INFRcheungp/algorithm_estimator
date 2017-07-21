@@ -19,9 +19,16 @@ for i in l:
 # @ALGO_END
 
 
+# @ALGO_START
+def recursive_test(n):
+	if n <= 1:
+		return 1
+	else:
+		return recursive_test(n-1) + recursive_test(n-1) + recursive_test(n-1)
+# @ALGO_END
+
 
 def test():
-	# @ALGO_START
 	for i in range(0,100):
 		for k in range(0,100):
 			print(i,k)
@@ -32,4 +39,3 @@ def test():
 			print(i,j)
 			for c in range(0,100):
 				print "MALARKEY!"
-	# @ALGO_END
