@@ -21,6 +21,7 @@ for i in l:
 
 
 def test():
+	# @ALGO_START
 	for i in range(0,100):
 		for k in range(0,100):
 			print(i,k)
@@ -31,3 +32,4 @@ def test():
 			print(i,j)
 			for c in range(0,100):
 				print "MALARKEY!"
+	# @ALGO_END

@@ -45,9 +45,26 @@ def strip_file(file):
 
 
 '''
+Usual Performance: O(branched_calls^depth)
+
+Look for the following for recursion:
+-Num of internal calls = For example, a recursive function that calls itself twice 
+for four iterations on each call will incur O(2^4) runtime or O(2^n), where n is the 
+depth of the call tree.
+
+-The num of iterations will be a runtime 
+'''
+def check_recursion(file):
+	# (0) Make sure it's a function first. Look for 'def' and '()' and ':'
+	# (1) Get the name of the function
+	# (2) check how many explicity calls inside the body. This gets us the 'branched_calls'
+
+
+'''
 Checks for the existence of for-loops in this file and estimates their Big O cost in runtime.
 '''
-def check_for_loops(file):
+def check_for_loops(code_segment):
+	print file
 	line_count = 1
 	'''
 	Loop through each line and detect for loops.
@@ -64,9 +81,9 @@ def check_for_loops(file):
 	for_loop_detected_previously = False
 	first_for_loop_detection = False
 
-	new_stripped_file = strip_file(file)
 
-	for line in new_stripped_file:
+
+	for line in code_segment:
 
 		if num_loops_detected >= 1:
 
@@ -96,7 +113,7 @@ def check_for_loops(file):
 
 		# FOR-LOOP DETECTION! It's a for loop! Now keep checking...
 		if "for" in line and "in" in line and "#" not in line:
-			current_index = new_stripped_file.index(line)
+			current_index = code_segment.index(line)
 			print "FOR LOOP FOUND ON LINE:\t", line_count, ": '", line.strip('\n'), "' INDEX:\t", current_index
 
 			# Only applies to the first time a for loop is detected
@@ -160,6 +177,14 @@ def find_algo_segments(_source_code_file_):
 	return code_segments_to_analyze
 
 
+'''
+Guesstimates the length of the input variable to for loops, recursive functions, etc. Would greatly
+determine the accuracy of the algorithmic performance
+'''
+def check_size_of_input(array):
+	pass
+
+
 ################################################################################################################################
 ################################################################################################################################
 
@@ -167,8 +192,9 @@ with open(file) as fp:
 	# Find the algorithm segment(s) first.
 	algo_segment_list = find_algo_segments(fp)
 
-	for i in algo_segment_list:
-		for j in i:
-			print j
+	num_code_segements = len(algo_segment_list)
 
-	# check_for_loops(fp)
+	# Go through each marked code segment and estimate its algorithmic runtime performance.
+	for i in range(0,num_code_segements):
+		check_for_loops(algo_segment_list[i])
+
