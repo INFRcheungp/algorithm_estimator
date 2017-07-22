@@ -73,6 +73,7 @@ def check_recursion(code_segment):
 	recursive_case = ''
 	num_recursive_calls = 0
 	name_of_func = ''
+	func_args = []
 
 	for line in code_segment:
 		# print line
@@ -80,11 +81,13 @@ def check_recursion(code_segment):
 			print line,'\n\n'
 			# Parse the name of the function from the string.
 			name_of_func = get_function_name(line) 
+			func_args = get_function_args(line)
 		else:
 			if name_of_func in line:
 				num_recursive_calls  = line.count(name_of_func)
 
 	print "NAME OF FUNC:\t", name_of_func
+	print "FUNCTION ARGUMENTS:\t", func_args
 	print "NUM OF RECURSIVE CALLS:\t", num_recursive_calls
 	print "POTENTIAL RUNTIME COMPLEXITY: O(", num_recursive_calls, "^n)"
 	print "POTENTIAL SPACE COMPLEXITY: O(n)"
@@ -109,9 +112,21 @@ def get_function_name(line):
 
 '''
 Grabs all of a function's arguments
+function_signature: 'def func(arg):'
 '''
 def get_function_args(function_signature):
-	pass
+	start_key = '('
+	end_key = ')'
+
+	# Get rid of the ':' char and 'def ', if any. Should only have 'func(args)' left.
+	function_signature = function_signature.replace(':', '').replace('def ', '')
+	print "SIG SO FAR:\t", function_signature, "\n\n"
+	# Keep everything after the '(' char and remove ')' and strip '\n' and split the string by ',' to get a list of args.
+	args = function_signature.split('(',1)[1].replace(')','').strip('\n').split(',')
+
+	# print "FUNCTION ARGUMENTS:\t", args
+	return args
+	# Keep only the things inside the '(' and ')' characters. These are our args.
 
 
 '''
@@ -239,6 +254,9 @@ def check_size_of_input(array):
 	pass
 
 
+
+
+
 ################################################################################################################################
 ################################################################################################################################
 
@@ -250,9 +268,8 @@ with open(file) as fp:
 
 	check_recursion(algo_segment_list[1])
 
-	# Go through each marked code segment and estimate its algorithmic runtime performance.
-	for i in range(0,num_code_segements):
-		print "SEGMENT:\n", algo_segment_list[i],'\n\n'
-		# check_for_loops(algo_segment_list[i])
-		# check_recursion(algo_segment_list[i])
-
+	# # Go through each marked code segment and estimate its algorithmic runtime performance.
+	# for i in range(0,num_code_segements):
+	# 	print "SEGMENT:\n", algo_segment_list[i],'\n\n'
+	# 	# check_for_loops(algo_segment_list[i])
+	# 	# check_recursion(algo_segment_list[i])

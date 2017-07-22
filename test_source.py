@@ -20,7 +20,9 @@ for i in l:
 
 
 # @ALGO_START
-def recursive_test(n):
+def recursive_test(a, b, n):
+	print a
+	print b
 	if n <= 1:
 		return 1
 	else:
